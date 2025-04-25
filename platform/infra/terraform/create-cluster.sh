@@ -18,6 +18,7 @@ terraform -chdir=dev apply -var aws_region="${TF_VAR_aws_region}" \
 
 aws eks update-kubeconfig --region $TF_VAR_aws_region --name $TF_VAR_prod_cluster_name
 
+
 # Initialize backend for PROD cluster
 terraform -chdir=prod init -reconfigure -backend-config="key=prod/eks-accelerator-vpc.tfstate" \
   -backend-config="bucket=$TF_VAR_state_s3_bucket" \
