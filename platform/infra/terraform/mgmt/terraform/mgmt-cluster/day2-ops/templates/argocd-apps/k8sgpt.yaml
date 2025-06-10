@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: k8sgpt-operator
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.k8sgpt.ai/
+    targetRevision: 0.2.9  
+    chart: k8sgpt-operator
+    helm:
+      valuesObject:
+          serviceAccount:
+            create: false
+          k8sgpt:
+            ai:
+              backend: "bedrock"
+              bedrock:
+                region: ${EKS_REGION}  
+                model: "anthropic.claude-3-5-sonnet-20241022-v2:0" 
+          metrics: 
+            enabled: true
+            serviceMonitor:
+              enabled: true
+          grafanaDashboards:
+            enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: k8sgpt-operator-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: "*"
+      kind: "*"
+      jsonPointers:
+        - /status
+
+

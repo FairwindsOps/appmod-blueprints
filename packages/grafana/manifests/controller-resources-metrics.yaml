@@ -1,0 +1,11 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: controller-resources-metrics-grafanadashboard
+  namespace: grafana-operator
+spec:
+  folder: "K8sGPT"
+  instanceSelector:
+    matchLabels:
+      dashboards: "external-grafana"
+  url: "https://raw.githubusercontent.com/aws-samples/appmod-blueprints/refs/heads/feat/k8sgpt/packages/grafana/dashboards/controller-resources-metrics.json"
