@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e -o pipefail
 
+echo "Start Script: $(pwd)/$(basename "$0")"
+
 export USER1_PASSWORD=${1}
 ADMIN_PASSWORD=${2}
 REPO_ROOT=$(git rev-parse --show-toplevel)
@@ -20,7 +22,7 @@ envsubst < config-payloads/user-password.json > config-payloads/user-password-to
 # ensure port-forward is killed
 trap '{
     rm config-payloads/user-password-to-be-applied.json || true
-    kill $pid
+    kill $pid || true
 }' EXIT
 
 echo "waiting for port forward to be ready"
@@ -29,12 +31,14 @@ while ! nc -vz localhost 8080 > /dev/null 2>&1 ; do
 done
 
 # Default token expires in one minute. May need to extend. very ugly
-KEYCLOAK_TOKEN=$(curl -sS  --fail-with-body -X POST -H "Content-Type: application/x-www-form-urlencoded" \
+KEYCLOAK_TOKEN_RESPONSE=$(curl -sS  --fail-with-body -X POST -H "Content-Type: application/x-www-form-urlencoded" \
   --data-urlencode "username=modernengg-admin" \
   --data-urlencode "password=${ADMIN_PASSWORD}" \
   --data-urlencode "grant_type=password" \
   --data-urlencode "client_id=admin-cli" \
-  localhost:8080/keycloak/realms/master/protocol/openid-connect/token | jq -e -r '.access_token')
+  localhost:8080/keycloak/realms/master/protocol/openid-connect/token)
+
+KEYCLOAK_TOKEN=$(echo $KEYCLOAK_TOKEN_RESPONSE | jq -e -r '.access_token')
 
 echo "creating modernengg realm and groups"
 curl -sS -H "Content-Type: application/json" \
@@ -98,3 +102,5 @@ if ls ${REPO_ROOT}/private/keycloak-tls-backup-* 1> /dev/null 2>&1; then
     TLS_FILE=$(ls -t ${REPO_ROOT}/private/keycloak-tls-backup-* | head -n1)
     kubectl apply -f ${TLS_FILE}
 fi
+
+echo "End Script: $(pwd)/$(basename "$0")"

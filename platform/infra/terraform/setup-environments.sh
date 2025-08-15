@@ -1,4 +1,7 @@
 #!/bin/bash
+
+echo "Script: $(pwd)/$(basename "$0")"
+
 #
 # Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #

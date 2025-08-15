@@ -1,5 +1,8 @@
 #!/bin/bash
+
 set -e -o pipefail
+
+echo "Start Script: $(basename "$0")"
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
 
@@ -53,3 +56,5 @@ kubectl -n argocd rollout status --watch --timeout=300s statefulset/argocd-appli
 kubectl -n argocd rollout status --watch --timeout=300s deployment/argocd-server
 
 cd -
+
+echo "End Script: $(pwd)/$(basename "$0")"

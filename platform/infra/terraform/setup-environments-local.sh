@@ -1,3 +1,7 @@
+#!/bin/bash
+
+echo "Start Script: $(pwd)/$(basename "$0")"
+
 AWS_REGION=$(aws configure get region)
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 AWS_ACCOUNT_ARN=$(aws sts get-caller-identity --query Arn --output text)

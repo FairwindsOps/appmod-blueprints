@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e -o pipefail
 
+echo "Start Script: $(pwd)/$(basename "$0")"
+
 REPO_ROOT=$(git rev-parse --show-toplevel)
 # source ${REPO_ROOT}/setups/utils.sh
 
@@ -29,7 +31,9 @@ cd -
 # The rest of the steps are defined as a Terraform module. Parse the config to JSON and use it as the Terraform variable file. This is done because JSON doesn't allow you to easily place comments.
 cd "${REPO_ROOT}/platform/infra/terraform/mgmt/terraform/mgmt-cluster/day2-ops"
 pwd
-yq -o json '.'  "${REPO_ROOT}/platform/infra/terraform/mgmt/setups/config.yaml" > ${REPO_ROOT}/platform/infra/terraform/mgmt/terraform/mgmt-cluster/day2-ops/terraform.tfvars.json
+yq . "${REPO_ROOT}/platform/infra/terraform/mgmt/setups/config.yaml" > ${REPO_ROOT}/platform/infra/terraform/mgmt/terraform/mgmt-cluster/day2-ops/terraform.tfvars.json
 
 terraform init -upgrade
 terraform apply -auto-approve
+
+echo "End Script: $(pwd)/$(basename "$0")"

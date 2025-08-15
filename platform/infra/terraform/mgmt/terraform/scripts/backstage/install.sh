@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e -o pipefail
 
+echo "Start Script: $(pwd)/$(basename "$0")"
+
 REPO_ROOT=$(git rev-parse --show-toplevel)
 cd ${REPO_ROOT}/platform/infra/terraform/mgmt/terraform/scripts/backstage
 
@@ -65,10 +67,10 @@ done
 
 pass=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
 
-token=$(curl -sS localhost:8085/api/v1/session -d "{\"username\":\"admin\",\"password\":\"${pass}\"}" | yq .token)
+token=$(curl -H "content-type: application/json" -sS localhost:8085/api/v1/session -d "{\"username\":\"admin\",\"password\":\"${pass}\"}" | yq .token)
 
 # THIS DOES NOT EXPIRE. Has read all permissions.
-argocdToken=$(curl -sS http://localhost:8085/api/v1/account/backstage/token -X POST -H "Authorization: Bearer ${token}" | yq .token)
+argocdToken=$(curl -H "content-type: application/json" -sS http://localhost:8085/api/v1/account/backstage/token -X POST -H "Authorization: Bearer ${token}" | yq .token)
 
 echo 'storing client secrets to backstage namespace'
 envsubst < secret-env-var.yaml | kubectl apply -f -
@@ -79,3 +81,5 @@ if ls ${REPO_ROOT}/private/backstage-tls-backup-* 1> /dev/null 2>&1; then
     TLS_FILE=$(ls -t ${REPO_ROOT}/private/backstage-tls-backup-* | head -n1)
     kubectl apply -f ${TLS_FILE}
 fi
+
+echo "End Script: $(pwd)/$(basename "$0")"
