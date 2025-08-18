@@ -78,7 +78,7 @@ resource "aws_secretsmanager_secret_version" "db_credentials_initial" {
       password = random_password.db_password.result
     })
   }
-  
+
 data "aws_secretsmanager_secret_version" "db_credentials" {
     secret_id  = aws_secretsmanager_secret.db_credentials.id
     depends_on = [aws_secretsmanager_secret_version.db_credentials_initial]
@@ -92,14 +92,14 @@ locals {
     # Use up to 3 AZs for the Aurora cluster
     aurora_azs = slice(var.availability_zones, 0, min(length(var.availability_zones), 3))
   }
-  
+
 resource "aws_rds_cluster" "rds_cluster_mod_engg_wksp" {
   cluster_identifier = "${var.name_prefix}mod-engg-wksp"
   availability_zones = local.aurora_azs
 
   engine         = "aurora-postgresql"
   engine_mode    = "provisioned"
-  engine_version = "16.3"
+  engine_version = "16.6"
 
   database_name   = "modwksp"
   master_username = local.db_creds.username
