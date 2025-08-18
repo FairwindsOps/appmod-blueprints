@@ -1,4 +1,7 @@
 #!/bin/bash
+
+echo "Script: $(pwd)/$(basename "$0")"
+
 aws eks update-kubeconfig --region $TF_VAR_aws_region --name $TF_VAR_dev_cluster_name
 
 git clone https://github.com/aws-observability/terraform-aws-observability-accelerator.git

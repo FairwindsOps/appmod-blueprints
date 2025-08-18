@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Script: $(pwd)/$(basename "$0")"
+
 # Initialize backend for DB DEV cluster
 terraform -chdir=dev/db init -reconfigure -backend-config="key=dev/db/db-ec2-cluster.tfstate" \
   -backend-config="bucket=$TF_VAR_state_s3_bucket" \

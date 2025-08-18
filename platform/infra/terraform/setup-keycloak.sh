@@ -1,4 +1,7 @@
 #!/bin/bash
+
+echo "Start Script: $(pwd)/$(basename "$0")"
+
 #
 # Copyright 2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
@@ -225,7 +228,7 @@ EOF
   else
     echo "AMG workspace is not configured for SAML authentication."
   fi
-  
+
   echo "Generating AMG workspace SAML authentication input configuration..."
   MERGED_AUTH_PROVIDERS=$(jq --compact-output --argjson arr1 "$AUTH_PROVIDERS" --argjson arr2 '["SAML"]' -n '$arr1 + $arr2 | unique_by(.)')
   WORKSPACE_AUTH_SAML_INPUT_CONFIG=$(cat <<EOF | jq --compact-output -r '.'
@@ -248,3 +251,5 @@ EOF
   echo "AMG workspace SAML authentication status: $WORKSPACE_AUTH_SAML_STATUS"
   echo ""
 }
+
+echo "End Script: $(pwd)/$(basename "$0")"

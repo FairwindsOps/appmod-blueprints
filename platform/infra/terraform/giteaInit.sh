@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Script: $(pwd)/$(basename "$0")"
+
 # This script requires DOMAIN_NAME variable to be setup already
 # DOMAIN_NAME is the domain name of the cluster
 
