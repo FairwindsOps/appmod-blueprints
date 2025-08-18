@@ -57,7 +57,7 @@ create_token() {
     https://$DOMAIN_NAME/gitea/api/v1/users/$USERNAME/tokens)
 
 
-  echo "Response for tolken"
+  echo "Response for token"
   echo "$response"
   # Extract the HTTP status code
   local status_code=$(echo "$response" | tail -n1)
