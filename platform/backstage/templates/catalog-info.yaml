@@ -34,4 +34,4 @@ metadata:
   description: Holds system information i.e, hostname, IP, OS, etc
 spec:
   owner: guest
-  hostname: HOSTNAME
+  hostname: idp-eng.hillghost.com
