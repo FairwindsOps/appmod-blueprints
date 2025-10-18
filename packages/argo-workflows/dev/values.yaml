@@ -1,9 +1,12 @@
 workflow:
   serviceAccount:
     create: false
-    name: argo-workflow-runner
   rbac:
     create: false
+controller:
+  workflowDefaults:
+    spec:
+      serviceAccountName: argo-workflow-runner
 server:
   baseHref: /argo-workflows/
   sso:
