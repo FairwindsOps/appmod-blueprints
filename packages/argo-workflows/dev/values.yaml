@@ -1,6 +1,7 @@
 workflow:
   serviceAccount:
     create: false
+    name: argo-workflow-runner
   rbac:
     create: false
 server:
