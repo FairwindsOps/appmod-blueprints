@@ -5,6 +5,7 @@ metadata:
   name: cicd-provisioner-template
   namespace: ${{values.namespace}}
 spec:
+  serviceAccountName: ${{values.appname}}-cicd-provisioner
   arguments:
     parameters:
     - name: appname
@@ -125,6 +126,7 @@ metadata:
   name: cicd-cache-warmup-template
   namespace: ${{values.namespace}}
 spec:
+  serviceAccountName: ${{values.appname}}-cicd-provisioner
   arguments:
     parameters:
     - name: appname
