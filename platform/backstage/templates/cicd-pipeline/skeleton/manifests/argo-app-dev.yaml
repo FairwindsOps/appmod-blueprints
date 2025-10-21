@@ -11,7 +11,7 @@ spec:
   project: default
   destination:
     namespace: ${{values.namespace}}
-    name: dev-cluster
+    name: in-cluster
   source:
     repoURL: http://${{values.hostname}}/gitea/giteaAdmin/${{values.appname}}
     targetRevision: main
