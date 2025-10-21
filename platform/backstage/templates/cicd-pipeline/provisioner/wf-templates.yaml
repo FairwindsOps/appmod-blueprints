@@ -51,7 +51,7 @@ spec:
     container:
       image: amazon/aws-cli:latest
       command: ["/bin/bash", "-c"]
-      args: 
+      args:
       - |
         aws ecr get-login-password --region "{{workflow.parameters.aws_region}}"
 
@@ -91,7 +91,7 @@ spec:
   - name: create-ecr-configmap
     inputs:
       parameters:
-      - name: image 
+      - name: image
     container:
       image: bitnami/kubectl:latest
       command: ["/bin/bash", "-c"]
@@ -111,7 +111,7 @@ spec:
       - |
         apk add curl jq
         hooks_api_url="{{workflow.parameters.hostname}}"/gitea/api/v1/repos/giteaAdmin/"{{workflow.parameters.appname}}"/hooks
-        webhook_url="http://{{workflow.parameters.hostname}}"/argo-events/"{{workflow.parameters.appname}}"
+        webhook_url="https://{{workflow.parameters.hostname}}"/argo-events/"{{workflow.parameters.appname}}"
         webhook_details=$(curl -k -X 'GET' "${hooks_api_url}" -H "accept: application/json" -H "Authorization: token ${GITEA_TOKEN}" -H "Content-Type: application/json" | jq '.[].config.url')
         if [ -z "$webhook_details" ]; then
           echo "Webhook is not found, creating webhook with $webhook_url"
@@ -181,7 +181,7 @@ spec:
                 value: "{{workflow.parameters.deployment_path}}"
           depends: "warmup"
 
-  - name: cleandir 
+  - name: cleandir
     container:
       volumeMounts:
         - mountPath: /workdir
@@ -264,7 +264,7 @@ spec:
   - name: update-image-tag
     inputs:
       parameters:
-        - name: env 
+        - name: env
         - name: tag
         - name: apprepo
         - name: deployment-path
@@ -288,7 +288,7 @@ spec:
           DEPLOY_PATH="{{inputs.parameters.deployment-path}}/{{inputs.parameters.env}}"
           tag="{{inputs.parameters.tag}}"
           mkdir -p $DEPLOY_PATH
-          git config --global user.email "noreply@aws.com" 
+          git config --global user.email "noreply@aws.com"
           git config --global user.name ARGO
           git remote set-url origin https://giteaAdmin:${GITEA_TOKEN}@"{{inputs.parameters.apprepo}}".git
           git pull --rebase
