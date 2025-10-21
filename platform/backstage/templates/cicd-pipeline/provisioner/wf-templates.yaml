@@ -109,13 +109,14 @@ spec:
           name: gitea-credentials
       args:
       - |
+        set -e
         apk add curl jq
         hooks_api_url="{{workflow.parameters.hostname}}"/gitea/api/v1/repos/giteaAdmin/"{{workflow.parameters.appname}}"/hooks
         webhook_url="http://{{workflow.parameters.hostname}}"/argo-events/"{{workflow.parameters.appname}}"
-        webhook_details=$(curl -k -X 'GET' "${hooks_api_url}" -H "accept: application/json" -H "Authorization: token ${GITEA_TOKEN}" -H "Content-Type: application/json" | jq '.[].config.url')
+        webhook_details=$(curl -L -k -X 'GET' "${hooks_api_url}" -H "accept: application/json" -H "Authorization: token ${GITEA_TOKEN}" -H "Content-Type: application/json" | jq '.[].config.url')
         if [ -z "$webhook_details" ]; then
           echo "Webhook is not found, creating webhook with $webhook_url"
-          curl -k -X 'POST' "${hooks_api_url}" -H "accept: application/json" -H "Authorization: token ${GITEA_TOKEN}" -H "Content-Type: application/json" -d '{"branch_filter": "main","type": "gitea", "events":["push"], "config": {"url": "'${webhook_url}'", "content_type": "json"}, "active": true}'
+          curl -L -k -X 'POST' "${hooks_api_url}" -H "accept: application/json" -H "Authorization: token ${GITEA_TOKEN}" -H "Content-Type: application/json" -d '{"branch_filter": "main","type": "gitea", "events":["push"], "config": {"url": "'${webhook_url}'", "content_type": "json"}, "active": true}'
         else
           echo "Webhook is already exists"
         fi
