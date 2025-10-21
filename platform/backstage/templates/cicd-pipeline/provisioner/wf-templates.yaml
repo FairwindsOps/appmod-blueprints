@@ -111,7 +111,7 @@ spec:
       - |
         set -x
         apk add curl jq
-        hooks_api_url="{{workflow.parameters.hostname}}"/gitea/api/v1/repos/giteaAdmin/"{{workflow.parameters.appname}}"/hooks
+        hooks_api_url="https://{{workflow.parameters.hostname}}"/gitea/api/v1/repos/giteaAdmin/"{{workflow.parameters.appname}}"/hooks
         webhook_url="https://{{workflow.parameters.hostname}}"/argo-events/"{{workflow.parameters.appname}}"
         webhook_details=$(curl -L -k -X 'GET' "${hooks_api_url}" -H "accept: application/json" -H "Authorization: token ${GITEA_TOKEN}" -H "Content-Type: application/json" | jq '.[].config.url')
         if [ -z "$webhook_details" ]; then
