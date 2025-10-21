@@ -109,7 +109,6 @@ spec:
           name: gitea-credentials
       args:
       - |
-        set -x
         apk add curl jq
         hooks_api_url="https://{{workflow.parameters.hostname}}"/gitea/api/v1/repos/giteaAdmin/"{{workflow.parameters.appname}}"/hooks
         webhook_url="https://{{workflow.parameters.hostname}}"/argo-events/"{{workflow.parameters.appname}}"
